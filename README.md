@@ -8,8 +8,8 @@
 
 1. **Склонировать репозиторий**  
  ```bash
-   git clone https://github.com/<your‑username>/<repo-name>.git
-   cd <repo-name>
+   git clone https://github.com/B1aho/RickAndMorty.git
+   cd RickAndMorty
 ```
 2. **Установить зависимости**
  ```bash
