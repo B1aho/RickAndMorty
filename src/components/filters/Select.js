@@ -5,7 +5,7 @@ import { BaseInput } from '../common/BaseInput';
 export function Select({ placeholder, options }) {
   return (
     <SelectInput>
-      <option value="" selected disabled hidden>
+      <option key="DEF-KEY" value="" selected disabled hidden>
         {placeholder}
       </option>
       {options.map((option) => {

@@ -2,11 +2,12 @@ import { css } from 'styled-components';
 
 export const BaseInput = css`
   background-color: #263750;
-  border: 1px solid #263750;
-  border-radius: 4px;
+  border: 1px solid #83bf46;
+  border-radius: 8px;
   color: #ffffff;
-  padding: 8px 12px;
-  width: 100%;
+  padding: 12px 16px;
+  width: 180px;
+  height: 40px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -22,7 +23,5 @@ export const BaseInput = css`
 
   &:focus {
     outline: none;
-    border-color: #83bf46;
-    box-shadow: 0 0 0 3px rgba(131, 191, 70, 0.4);
   }
 `;
