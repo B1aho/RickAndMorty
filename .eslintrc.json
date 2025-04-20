@@ -13,7 +13,10 @@
     "no-unused-vars": ["warn", { "vars": "all", "args": "after-used" }],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     // Add path to all source code
-    "import/no-unused-modules": ["warn", { "unusedExports": true, "src": ["src/**/*.{js}"] }],
+    "import/no-unused-modules": ["warn", {
+      "unusedExports": true,
+      "src": ["src/**/*.{js, jsx}"]
+    }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
     "react/no-array-index-key": "warn",
