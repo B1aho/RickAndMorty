@@ -2,6 +2,9 @@ import styled, { css } from 'styled-components';
 import { PopupEpisodes } from './PopupEpisodes';
 import { PopupHeader } from './PopupHeader';
 import { PopupInfo } from './PopupInfo';
+import { useEffect } from 'react';
+import { useRef } from 'react';
+import { useCallback } from 'react';
 
 export function Popup({ settings: { visible, content = {} }, setSettings }) {
   const {
@@ -16,22 +19,57 @@ export function Popup({ settings: { visible, content = {} }, setSettings }) {
     episode: episodes
   } = content;
 
-  function togglePopup(e) {
-    if (e.currentTarget !== e.target) {
-      return;
-    }
+  const popupContainerRef = useRef(null);
 
+  const closePopup = useCallback(() => {
     setSettings((prevState) => ({
       ...prevState,
-      visible: !prevState.visible
+      visible: false
     }));
-  }
+  }, [setSettings]);
+
+  document.body.style.overflow = visible ? 'hidden' : 'auto';
+
+  useEffect(() => {
+    const onClick = (e) => {
+      if (e.target === popupContainerRef.current) {
+        closePopup();
+      }
+    };
+
+    const onEsc = (e) => {
+      if (e.key === 'Escape') {
+        closePopup();
+      }
+    };
+
+    document.addEventListener('click', onClick);
+    document.addEventListener('keyup', onEsc);
+
+    return () => {
+      document.removeEventListener('click', onClick);
+      document.removeEventListener('keyup', onEsc);
+    };
+  }, [closePopup, visible]);
+
+  const togglePopup = useCallback(
+    (e) => {
+      if (e.currentTarget !== e.target) {
+        return;
+      }
+
+      setSettings((prevState) => ({
+        ...prevState,
+        visible: !prevState.visible
+      }));
+    },
+    [setSettings]
+  );
 
   return (
-    <PopupContainer visible={visible}>
+    <PopupContainer ref={popupContainerRef} visible={visible}>
+      <CloseIcon onClick={togglePopup} />
       <StyledPopup>
-        <CloseIcon onClick={togglePopup} />
-
         <PopupHeader
           name={name}
           gender={gender}
@@ -100,6 +138,7 @@ const StyledPopup = styled.div`
 
 const CloseIcon = styled.div`
   cursor: pointer;
+  z-index: 11;
   position: fixed;
   right: calc(30% - 10px);
   top: calc(10vh - 30px);
