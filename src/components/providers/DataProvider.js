@@ -9,6 +9,7 @@ export function DataProvider({ children }) {
   const [characters, setCharacters] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [info, setInfo] = useState({});
   const [apiURL, setApiURL] = useState(API_URL);
   // Добавляем состояние фильтров и возвращаем setFilters в компонент фильтров, который сможет настраивать их
@@ -22,6 +23,7 @@ export function DataProvider({ children }) {
   const fetchData = useCallback(async (url) => {
     setIsFetching(true);
     setIsError(false);
+    setNotFound(false);
 
     axios
       .get(url)
@@ -31,8 +33,14 @@ export function DataProvider({ children }) {
         setInfo(data.info);
       })
       .catch((e) => {
-        setIsError(true);
-        console.error(e);
+        if (e.response?.status === 404) {
+          setCharacters([]);
+          setInfo({});
+          setNotFound(true);
+        } else {
+          setIsError(true);
+          console.error(e);
+        }
       })
       .finally(() => {
         setIsFetching(false);
@@ -54,9 +62,19 @@ export function DataProvider({ children }) {
       isFetching,
       isError,
       info,
+      notFound,
       API_URL
     }),
-    [activePage, apiURL, characters, isFetching, isError, info, fetchData]
+    [
+      activePage,
+      apiURL,
+      characters,
+      isFetching,
+      isError,
+      info,
+      notFound,
+      fetchData
+    ]
   );
 
   return (

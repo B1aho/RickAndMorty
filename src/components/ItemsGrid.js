@@ -13,12 +13,15 @@ export function ItemsGrid() {
   const { characters } = useData();
   const [popupSettings, setPopupSettings] = useState(defaultPopupSettings);
 
-  const cardOnClickHandler = useCallback((cardData) => {
-    setPopupSettings({
-      visible: true,
-      content: { ...cardData }
-    });
-  }, []);
+  const cardOnClickHandler = useCallback(
+    (cardData) => {
+      setPopupSettings({
+        visible: true,
+        content: { ...cardData }
+      });
+    },
+    [setPopupSettings]
+  );
 
   if (!characters.length) {
     return null;

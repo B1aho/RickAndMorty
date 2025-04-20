@@ -3,7 +3,15 @@ import { Loader, Text } from './common';
 import { useData } from './providers';
 
 export function AppState() {
-  const { isFetching, isError } = useData();
+  const { isFetching, isError, notFound } = useData();
+
+  if (notFound) {
+    return (
+      <AppStateContainer>
+        <Text>Nothing was found.</Text>
+      </AppStateContainer>
+    );
+  }
 
   if (isError) {
     return (
