@@ -10,7 +10,10 @@ export function PopupEpisodes({ episodes }) {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     if (!episodes?.length) {
+      setIsFetching(false);
+
       return;
     }
 
@@ -26,7 +29,12 @@ export function PopupEpisodes({ episodes }) {
         } else {
           setSeries(data);
         }
+      })
+      .finally(() => {
+        if (mounted) setIsFetching(false);
       });
+
+    return () => (mounted = false);
   }, [episodes]);
 
   if (isFetching) {
