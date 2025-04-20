@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Select } from './Select';
 import { TextInput } from './TextInput';
 import styled from 'styled-components';
 import { BaseButton } from '../common/BaseButton';
 import { useData } from '../providers/DataProvider';
+import { defaultValues } from './filterDefaults';
 
 export function Filters() {
   const [filters, setFilters] = useState(defaultValues);
@@ -15,17 +16,45 @@ export function Filters() {
     }));
   };
 
-  const { API_URL, setApiURL } = useData();
-
+  /* Filter Handlers */
+  const { API_URL, setApiURL, setActivePage } = useData();
   const onReset = useCallback(() => {
     setFilters(defaultValues);
+    // Clear URL query
+    const newURL = `${window.location.pathname}`;
+    window.history.pushState({}, '', newURL);
+    setActivePage(0);
     setApiURL(`${API_URL}`);
-  }, [setApiURL, API_URL]);
+  }, [setApiURL, API_URL, setActivePage]);
 
   const onApply = useCallback(() => {
-    const params = new URLSearchParams(filters).toString();
+    let params = new URLSearchParams();
+    // Use only not empty filters
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.set(key, value);
+    });
+    // Update URL sync to filters query
+    params = params.toString();
+    const newURL = `${window.location.pathname}?${params}`;
+    window.history.pushState({}, '', newURL);
+    setActivePage(0);
     setApiURL(`${API_URL}${params}`);
-  }, [API_URL, setApiURL, filters]);
+  }, [API_URL, setApiURL, filters, setActivePage]);
+
+  /* Apply query from URL */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const filtersFromURL = {
+      status: params.get('status') || '',
+      gender: params.get('gender') || '',
+      species: params.get('species') || '',
+      name: params.get('name') || '',
+      type: params.get('type') || ''
+    };
+    setFilters(filtersFromURL);
+    setActivePage(0);
+    setApiURL(`${API_URL}${params.toString()}`);
+  }, [setApiURL, setActivePage, API_URL]);
 
   return (
     <FiltersContainer>
@@ -64,14 +93,6 @@ export function Filters() {
   );
 }
 
-const defaultValues = {
-  status: '',
-  gender: '',
-  species: '',
-  name: '',
-  type: ''
-};
-
 const FiltersContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -94,5 +115,4 @@ const FilterControls = styled.div`
 `;
 
 const Apply = BaseButton('#83BF46');
-
 const Reset = BaseButton('#FF5152');
