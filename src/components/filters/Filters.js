@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Select } from './Select';
+import { Select } from './Select/Select';
 import { TextInput } from './TextInput';
 import styled from 'styled-components';
 import { BaseButton } from '../common/BaseButton';

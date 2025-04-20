@@ -3,6 +3,9 @@ import { css } from 'styled-components';
 export const BaseInput = css`
   background-color: #263750;
   border: 1px solid #83bf46;
+  font-size: 16px;
+  font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
   border-radius: 8px;
   color: #ffffff;
   padding: 12px 16px;
