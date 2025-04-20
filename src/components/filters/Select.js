@@ -1,11 +1,19 @@
 import styled from 'styled-components';
 import { BaseInput } from '../common/BaseInput';
+import { useCallback } from 'react';
 
 // При поиске params lowerCase
-export function Select({ placeholder, options }) {
+export function Select({ placeholder, options, value, onChange }) {
+  const handleSelect = useCallback(
+    (e) => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
+
   return (
-    <SelectInput>
-      <option key="DEF-KEY" value="" selected disabled hidden>
+    <SelectInput value={value} onChange={handleSelect}>
+      <option key="DEF-KEY" value="" disabled hidden>
         {placeholder}
       </option>
       {options.map((option) => {
