@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useCallback } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-const API_URL = 'https://rickandmortyapi.com/api/character/';
+const API_URL = 'https://rickandmortyapi.com/api/character/?';
 
 export function DataProvider({ children }) {
   const [activePage, setActivePage] = useState(0);
@@ -11,7 +11,14 @@ export function DataProvider({ children }) {
   const [isError, setIsError] = useState(false);
   const [info, setInfo] = useState({});
   const [apiURL, setApiURL] = useState(API_URL);
+  // Добавляем состояние фильтров и возвращаем setFilters в компонент фильтров, который сможет настраивать их
+  // filters объект с конфигурацией фильтров - дефолтными значениями null/undefined
+  // Здесь хук который применяет params к url или применять прямо перед fetchData();
 
+  /**
+   * const params = new URLSearchParams().toString();
+    setApiURL(`${API_URL}${params}`);
+   */
   const fetchData = useCallback(async (url) => {
     setIsFetching(true);
     setIsError(false);
@@ -46,7 +53,8 @@ export function DataProvider({ children }) {
       fetchData,
       isFetching,
       isError,
-      info
+      info,
+      API_URL
     }),
     [activePage, apiURL, characters, isFetching, isError, info, fetchData]
   );
